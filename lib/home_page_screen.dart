@@ -9,10 +9,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  List<String> _names = [];
-  String currentName = "";
-  var random = Random();
-  String? winnerName;
+  
+  /// Controller per il [TextField] che permette di inserire un nome.
+  late final TextEditingController _inputController;
+  
+  /// Lista dei nomi inseriti.
+  final _names = <String>[];
+
+  /// Generatore di numeri casuali.
+  final _random = Random();
+
+  /// Nome estratto.
+  String? _winnerName;
+
+  @override
+  void initState() {
+    super.initState();
+    _inputController = TextEditingController();
+  }
 
   /// Mostra un [SnackBar] con il testo [text].
   void _showSnackBar(BuildContext context, {required String text}) {
@@ -23,6 +37,21 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  /// Aggiunge un nome alla lista dei nomi.
+  void _addName() {
+    final name = _inputController.text;
+
+    if (name.isEmpty) {
+      _showSnackBar(context, text: "Inserisci un nome");
+      return;
+    }
+
+    setState(() {
+      _inputController.clear();
+      _names.add(name);
+    });
+  }
+
   /// Estrae un nome casuale dalla lista dei nomi.
   void _extractWinner() {
     if (_names.isEmpty) {
@@ -30,17 +59,19 @@ class MyHomePageState extends State<MyHomePage> {
       return;
     }
 
-    final winnerIndex = random.nextInt(_names.length);
+    final winnerIndex = _random.nextInt(_names.length);
 
     setState(() {
-      winnerName = _names[winnerIndex];
+      _winnerName = _names[winnerIndex];
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text("Estrazione libro"),
+      ),
       body: Center(
         child: Column(
           children: [
@@ -50,21 +81,18 @@ class MyHomePageState extends State<MyHomePage> {
                 children: [
                   Expanded(
                     child: TextField(
-                      onChanged: (value) {
-                        currentName = value;
-                      },
-                      decoration:
-                          const InputDecoration(hintText: "Nome persona"),
+                      controller: _inputController,
+                      onSubmitted: (_) => _addName(),
+                      decoration: const InputDecoration(
+                        hintText: "Nome persona",
+                      ),
                     ),
                   ),
                   IconButton(
-                      iconSize: 24,
-                      onPressed: () {
-                        setState(() {
-                          _names.add(currentName);
-                        });
-                      },
-                      icon: const Icon(Icons.send))
+                    iconSize: 24,
+                    onPressed: _addName,
+                    icon: const Icon(Icons.send),
+                  )
                 ],
               ),
             ),
@@ -85,13 +113,16 @@ class MyHomePageState extends State<MyHomePage> {
               onPressed: _extractWinner,
               child: const Text("Estrai un nome"),
             ),
-            if (winnerName != null)
-              Wrap(children: [
-                Text(
-                  "The winner is $winnerName",
-                  style: const TextStyle(fontSize: 30),
-                ),
-              ])
+            if (_winnerName != null) ...[
+              Wrap(
+                children: [
+                  Text(
+                    "The winner is $_winnerName",
+                    style: const TextStyle(fontSize: 30),
+                  ),
+                ],
+              )
+            ]
           ],
         ),
       ),
