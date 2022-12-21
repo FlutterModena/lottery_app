@@ -67,6 +67,16 @@ class _ExtractNameScreenState extends State<ExtractNameScreen> {
       return;
     }
 
+    if (_names.length == 1) {
+      _showSnackBar(context, text: "Inserisci almeno un due nomi");
+      return;
+    }
+
+    if (_winnerName != null) {
+      _showSnackBar(context, text: "Il nome è già stato estratto");
+      return;
+    }
+
     final winnerIndex = _random.nextInt(_names.length);
 
     setState(() {
