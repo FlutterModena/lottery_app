@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:estrazione_libro/person_chip.dart';
 import 'package:flutter/material.dart';
 
 /// Schermata che permette di inserire dei nomi e di estrarne uno casuale.
@@ -39,7 +40,7 @@ class _ExtractNameScreenState extends State<ExtractNameScreen> {
 
   /// Aggiunge un nome alla lista dei nomi.
   void _addName() {
-    final name = _inputController.text;
+    final name = _inputController.text.trim();
 
     if (name.isEmpty) {
       _showSnackBar(context, text: "Inserisci un nome");
@@ -49,6 +50,13 @@ class _ExtractNameScreenState extends State<ExtractNameScreen> {
     setState(() {
       _inputController.clear();
       _names.add(name);
+    });
+  }
+
+  /// Rimuove un nome dalla lista dei nomi.
+  void _deleteName(String name) {
+    setState(() {
+      _names.remove(name);
     });
   }
 
@@ -104,16 +112,22 @@ class _ExtractNameScreenState extends State<ExtractNameScreen> {
                 )
               ],
             ),
-            Wrap(
-              spacing: 5,
-              runSpacing: 5,
-              children: [
-                for (final name in _names) ...[
-                  Chip(
-                    label: Text(name),
-                  )
-                ]
-              ],
+            Padding(
+              padding: EdgeInsets.only(top: _names.isEmpty ? 0 : 10.0),
+              child: Wrap(
+                spacing: 5,
+                runSpacing: -5,
+                children: [
+                  for (final name in _names) ...[
+                    PersonChip(
+                      isWinner: name == _winnerName,
+                      name: name,
+                      canDelete: _winnerName == null,
+                      onDeleteName: _deleteName,
+                    )
+                  ]
+                ],
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(top: _names.isEmpty ? 20.0 : 0),
@@ -141,13 +155,17 @@ class _ExtractNameScreenState extends State<ExtractNameScreen> {
               ),
             ),
             if (_winnerName != null) ...[
-              Wrap(
-                children: [
-                  Text(
-                    "The winner is $_winnerName",
-                    style: const TextStyle(fontSize: 30),
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Flexible(
+                    child: Text(
+                      "The winner is $_winnerName 🎉",
+                      style: const TextStyle(fontSize: 30),
+                    ),
                   ),
-                ],
+                ),
               )
             ]
           ],
