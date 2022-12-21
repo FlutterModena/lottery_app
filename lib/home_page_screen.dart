@@ -3,16 +3,25 @@ import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
-  
+
   @override
   State<StatefulWidget> createState() => MyHomePageState();
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  List<String> names = [];
+  List<String> _names = [];
   String currentName = "";
   var random = Random();
   String? winnerName;
+
+  /// Mostra un [SnackBar] con il testo [text].
+  void _showSnackBar(BuildContext context, {required String text}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +47,7 @@ class MyHomePageState extends State<MyHomePage> {
                       iconSize: 24,
                       onPressed: () {
                         setState(() {
-                          names.add(currentName);
+                          _names.add(currentName);
                         });
                       },
                       icon: const Icon(Icons.send))
@@ -49,21 +58,26 @@ class MyHomePageState extends State<MyHomePage> {
               height: 50.0,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: names.length,
+                itemCount: _names.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: Text(names[index]),
+                    child: Text(_names[index]),
                   );
                 },
               ),
             ),
             TextButton(
               onPressed: () {
-                var n = random.nextInt(names.length);
+                if (_names.isEmpty) {
+                  _showSnackBar(context, text: "Inserisci almeno un nome");
+                  return;
+                }
+
+                var n = random.nextInt(_names.length);
 
                 setState(() {
-                  winnerName = names[n];
+                  winnerName = _names[n];
                 });
               },
               child: const Text("Estrai un nome"),
