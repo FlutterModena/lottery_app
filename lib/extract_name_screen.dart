@@ -62,6 +62,11 @@ class _ExtractNameScreenState extends State<ExtractNameScreen> {
 
   /// Estrae un nome casuale dalla lista dei nomi.
   void _extractWinner() {
+    if (_winnerName != null) {
+      _showSnackBar(context, text: "Il nome è già stato estratto");
+      return;
+    }
+    
     if (_names.isEmpty) {
       _showSnackBar(context, text: "Inserisci almeno un nome");
       return;
@@ -69,11 +74,6 @@ class _ExtractNameScreenState extends State<ExtractNameScreen> {
 
     if (_names.length == 1) {
       _showSnackBar(context, text: "Inserisci almeno un due nomi");
-      return;
-    }
-
-    if (_winnerName != null) {
-      _showSnackBar(context, text: "Il nome è già stato estratto");
       return;
     }
 
