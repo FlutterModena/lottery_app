@@ -1,18 +1,17 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class ExtractNameScreen extends StatefulWidget {
+  const ExtractNameScreen({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => MyHomePageState();
+  State<StatefulWidget> createState() => ExtractNameScreenState();
 }
 
-class MyHomePageState extends State<MyHomePage> {
-  
+class ExtractNameScreenState extends State<ExtractNameScreen> {
   /// Controller per il [TextField] che permette di inserire un nome.
   late final TextEditingController _inputController;
-  
+
   /// Lista dei nomi inseriti.
   final _names = <String>[];
 
