@@ -5,10 +5,10 @@ class ExtractNameScreen extends StatefulWidget {
   const ExtractNameScreen({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => ExtractNameScreenState();
+  State<ExtractNameScreen> createState() => _ExtractNameScreenState();
 }
 
-class ExtractNameScreenState extends State<ExtractNameScreen> {
+class _ExtractNameScreenState extends State<ExtractNameScreen> {
   /// Controller per il [TextField] che permette di inserire un nome.
   late final TextEditingController _inputController;
 
