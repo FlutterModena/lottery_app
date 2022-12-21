@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+/// Schermata che permette di inserire dei nomi e di estrarne uno casuale.
 class ExtractNameScreen extends StatefulWidget {
   const ExtractNameScreen({Key? key}) : super(key: key);
 
@@ -65,52 +66,79 @@ class _ExtractNameScreenState extends State<ExtractNameScreen> {
     });
   }
 
+  /// Resetta lo stato dell'app.
+  void _resetAll() {
+    setState(() {
+      _inputController.clear();
+      _names.clear();
+      _winnerName = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Estrazione libro"),
+        title: const Text("Estrazione"),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _inputController,
-                      onSubmitted: (_) => _addName(),
-                      decoration: const InputDecoration(
-                        hintText: "Nome persona",
-                      ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _inputController,
+                    onSubmitted: (_) => _addName(),
+                    decoration: const InputDecoration(
+                      hintText: "Nome persona",
                     ),
                   ),
-                  IconButton(
-                    iconSize: 24,
-                    onPressed: _addName,
-                    icon: const Icon(Icons.send),
+                ),
+                IconButton(
+                  iconSize: 24,
+                  onPressed: _addName,
+                  icon: const Icon(Icons.send),
+                )
+              ],
+            ),
+            Wrap(
+              spacing: 5,
+              runSpacing: 5,
+              children: [
+                for (final name in _names) ...[
+                  Chip(
+                    label: Text(name),
                   )
+                ]
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: _names.isEmpty ? 20.0 : 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.blue,
+                    ),
+                    onPressed: _extractWinner,
+                    child: const Text("Estrai un nome"),
+                  ),
+                  const SizedBox(width: 20),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.red,
+                    ),
+                    onPressed: _resetAll,
+                    child: const Icon(Icons.refresh, size: 20),
+                  ),
                 ],
               ),
-            ),
-            SizedBox(
-              height: 50.0,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _names.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(_names[index]),
-                  );
-                },
-              ),
-            ),
-            TextButton(
-              onPressed: _extractWinner,
-              child: const Text("Estrai un nome"),
             ),
             if (_winnerName != null) ...[
               Wrap(
