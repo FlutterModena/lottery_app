@@ -23,6 +23,20 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  /// Estrae un nome casuale dalla lista dei nomi.
+  void _extractWinner() {
+    if (_names.isEmpty) {
+      _showSnackBar(context, text: "Inserisci almeno un nome");
+      return;
+    }
+
+    final winnerIndex = random.nextInt(_names.length);
+
+    setState(() {
+      winnerName = _names[winnerIndex];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,18 +82,7 @@ class MyHomePageState extends State<MyHomePage> {
               ),
             ),
             TextButton(
-              onPressed: () {
-                if (_names.isEmpty) {
-                  _showSnackBar(context, text: "Inserisci almeno un nome");
-                  return;
-                }
-
-                var n = random.nextInt(_names.length);
-
-                setState(() {
-                  winnerName = _names[n];
-                });
-              },
+              onPressed: _extractWinner,
               child: const Text("Estrai un nome"),
             ),
             if (winnerName != null)
