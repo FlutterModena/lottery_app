@@ -20,7 +20,7 @@ class ButtonIcon extends StatelessWidget {
         foregroundColor: fgColor,
         backgroundColor: bgColor,
       ),
-      onPressed: () => fun,
+      onPressed: () => fun(),
       child: Icon(iconData, size: 20),
     );
   }

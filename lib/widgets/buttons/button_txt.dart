@@ -19,7 +19,7 @@ class ButtonTxt extends StatelessWidget {
         foregroundColor: fgColor,
         backgroundColor: bgColor,
       ),
-      onPressed: ()=>fun,
+      onPressed: () => fun(),
       child: Text(text),
     );
   }
