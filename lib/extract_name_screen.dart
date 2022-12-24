@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'package:estrazione_libro/person_chip.dart';
+import 'package:estrazione_libro/widgets/buttons/button_icon.dart';
+import 'package:estrazione_libro/widgets/buttons/button_txt.dart';
 import 'package:flutter/material.dart';
 
 /// Schermata che permette di inserire dei nomi e di estrarne uno casuale.
@@ -21,7 +23,7 @@ class _ExtractNameScreenState extends State<ExtractNameScreen> {
   final _random = Random();
 
   /// Nome estratto.
-  String? _winnerName;
+  String _winnerName = "";
 
   @override
   void initState() {
@@ -62,11 +64,11 @@ class _ExtractNameScreenState extends State<ExtractNameScreen> {
 
   /// Estrae un nome casuale dalla lista dei nomi.
   void _extractWinner() {
-    if (_winnerName != null) {
+    if (_winnerName.isNotEmpty) {
       _showSnackBar(context, text: "Il nome è già stato estratto");
       return;
     }
-    
+
     if (_names.isEmpty) {
       _showSnackBar(context, text: "Inserisci almeno un nome");
       return;
@@ -89,7 +91,7 @@ class _ExtractNameScreenState extends State<ExtractNameScreen> {
     setState(() {
       _inputController.clear();
       _names.clear();
-      _winnerName = null;
+      _winnerName = "";
     });
   }
 
@@ -99,6 +101,12 @@ class _ExtractNameScreenState extends State<ExtractNameScreen> {
       appBar: AppBar(
         title: const Text("Estrazione"),
       ),
+      persistentFooterAlignment: AlignmentDirectional.center,
+      persistentFooterButtons: [
+        ButtonTxt(fun: _extractWinner),
+        const SizedBox(width: 20),
+        ButtonIcon(fun: _resetAll),
+      ],
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -132,39 +140,14 @@ class _ExtractNameScreenState extends State<ExtractNameScreen> {
                     PersonChip(
                       isWinner: name == _winnerName,
                       name: name,
-                      canDelete: _winnerName == null,
+                      canDelete: _winnerName.isEmpty,
                       onDeleteName: _deleteName,
                     )
                   ]
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: _names.isEmpty ? 20.0 : 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.blue,
-                    ),
-                    onPressed: _extractWinner,
-                    child: const Text("Estrai un nome"),
-                  ),
-                  const SizedBox(width: 20),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.red,
-                    ),
-                    onPressed: _resetAll,
-                    child: const Icon(Icons.refresh, size: 20),
-                  ),
-                ],
-              ),
-            ),
-            if (_winnerName != null) ...[
+            if (_winnerName.isNotEmpty) ...[
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: Align(
